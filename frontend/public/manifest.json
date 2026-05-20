@@ -1,0 +1,6 @@
+{
+  "short_name": "Grounded Claims Verifier",
+  "name": "Grounded Claims Verifier",
+  "start_url": ".",
+  "display": "standalone"
+}
