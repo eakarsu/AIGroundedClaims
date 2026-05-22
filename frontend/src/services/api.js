@@ -62,6 +62,37 @@ export const aiParaphraseLink = (body) => request('/ai/paraphrase-link', { metho
 export const aiSourceDeduplicate = (body) => request('/ai/source-deduplicate', { method: 'POST', body: JSON.stringify(body || {}) });
 export const aiEntailmentScore = (body) => request('/ai/entailment-score', { method: 'POST', body: JSON.stringify(body || {}) });
 
+// Pass 7 — new AI features
+export const aiCitationCoverage = (body) => request('/ai/citation-coverage', { method: 'POST', body: JSON.stringify(body || {}) });
+export const aiHallucinationFlag = (body) => request('/ai/hallucination-flag', { method: 'POST', body: JSON.stringify(body || {}) });
+export const aiSourceCredibility = (body) => request('/ai/source-credibility', { method: 'POST', body: JSON.stringify(body || {}) });
+export const aiCitationGenerate = (body) => request('/ai/citation-generate', { method: 'POST', body: JSON.stringify(body || {}) });
+export const aiQuoteVerify = (body) => request('/ai/quote-verify', { method: 'POST', body: JSON.stringify(body || {}) });
+export const aiNumericConsistency = (body) => request('/ai/numeric-consistency', { method: 'POST', body: JSON.stringify(body || {}) });
+export const aiClaimNovelty = (body) => request('/ai/claim-novelty', { method: 'POST', body: JSON.stringify(body || {}) });
+export const aiEvidenceRetrieve = (body) => request('/ai/evidence-retrieve', { method: 'POST', body: JSON.stringify(body || {}) });
+export const aiRagAnswer = (body) => request('/ai/rag-answer', { method: 'POST', body: JSON.stringify(body || {}) });
+
+// Pass 7 — evidence library CRUD (sources / document_spans / evidence_links)
+export const sourcesApi = crud('sources');
+export const documentSpansApi = crud('document-spans');
+export const evidenceLinksApi = crud('evidence-links');
+
+// Pass 7 — extras
+export const getAuditLog = (q = {}) => {
+  const qs = new URLSearchParams(q).toString();
+  return request(`/audit-log${qs ? '?' + qs : ''}`);
+};
+export const getClaimReviewJsonLd = (claimId) => request(`/claims/${claimId}/claim-review.jsonld`);
+export const getClaimProvenance = (claimId) => request(`/claims/${claimId}/provenance`);
+export const getClaimDiff = (claimId) => request(`/claims/${claimId}/diff`);
+export const getFactCheck = (claimId) => request(`/fact-checks/${claimId}`);
+export const getAnchorAdvice = (reportId) => request(`/grounding-reports/${reportId}/anchor-advice`);
+export const assignClaim = (claimId, reviewer) => request(`/claims/${claimId}/assign`, { method: 'POST', body: JSON.stringify({ reviewer }) });
+export const transitionClaim = (claimId, to_status) => request(`/claims/${claimId}/transition`, { method: 'POST', body: JSON.stringify({ to_status }) });
+export const bulkIngestDocuments = (ndjson) => request('/documents/bulk', { method: 'POST', headers: { 'Content-Type': 'application/x-ndjson' }, body: ndjson });
+export const getDashboardExtras = () => request('/dashboard-extras');
+
 export const getAIHistory = (feature, limit = 25) => {
   const qs = new URLSearchParams({ ...(feature ? { feature } : {}), limit: String(limit) }).toString();
   return request(`/ai/history?${qs}`);

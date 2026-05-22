@@ -40,4 +40,11 @@ app.use('/api', require('./routes/groundedExtras'));
 // Custom Views (mounted BEFORE any 404 handler)
 app.use('/api/custom-views', require('./routes/customViews'));
 
+// Pass 7: evidence-library CRUD + extras (mounted BEFORE any 404 handler)
+app.use('/api/sources', require('./routes/Sources'));
+app.use('/api/document-spans', require('./routes/DocumentSpans'));
+app.use('/api/evidence-links', require('./routes/EvidenceLinks'));
+app.use('/api', require('./routes/groundedPass7'));
+app.use('/api/source-staleness-monitor', require('./routes/sourceStalenessMonitor'));
+
 app.listen(PORT, () => console.log(`\nGrounded Claims Verifier API on http://localhost:${PORT}\n`));

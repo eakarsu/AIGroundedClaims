@@ -6,6 +6,9 @@ const CRUD_LINKS = [
   { to: '/documents', label: 'Documents' },
   { to: '/claims', label: 'Claims' },
   { to: '/source-corpora', label: 'Source Corpora' },
+  { to: '/sources', label: 'Sources' },
+  { to: '/document-spans', label: 'Document Spans' },
+  { to: '/evidence-links', label: 'Evidence Links' },
   { to: '/grounding-reports', label: 'Grounding Reports' },
   { to: '/signatures', label: 'Signatures' },
   { to: '/redaction-logs', label: 'Redaction Logs' },
@@ -19,11 +22,24 @@ const AI_LINKS = [
   { to: '/ai/paraphrase-link', label: 'AI · Paraphrase Linker' },
   { to: '/ai/source-deduplicate', label: 'AI · Source Deduplicator' },
   { to: '/ai/entailment-score', label: 'AI · Entailment Score' },
+  { to: '/ai/citation-coverage', label: 'AI · Citation Coverage' },
+  { to: '/ai/hallucination-flag', label: 'AI · Hallucination Flagger' },
+  { to: '/ai/source-credibility', label: 'AI · Source Credibility' },
+  { to: '/ai/citation-generate', label: 'AI · Citation Generator' },
+  { to: '/ai/quote-verify', label: 'AI · Quote Verifier' },
+  { to: '/ai/numeric-consistency', label: 'AI · Numeric Consistency' },
+  { to: '/ai/claim-novelty', label: 'AI · Claim Novelty' },
+  { to: '/ai/evidence-retrieve', label: 'AI · Evidence Retriever' },
+  { to: '/ai/rag-answer', label: 'AI · RAG Answer' },
 ];
 
 const CUSTOM_LINKS = [
   { to: '/wb/pdf-viewer', label: 'PDF Viewer' },
   { to: '/wb/merkle-viewer', label: 'Merkle Viewer' },
+  { to: '/provenance-graph', label: 'Provenance Graph' },
+  { to: '/fact-check-publisher', label: 'Fact-Check Publisher' },
+  { to: '/bulk-ingest', label: 'Bulk Ingest' },
+  { to: '/audit-log', label: 'Audit Log' },
 ];
 
 export default function Sidebar() {

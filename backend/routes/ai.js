@@ -10,7 +10,16 @@ const SCHEMAS = {
   'contradiction-detect': `{"contradicts":boolean,"contradiction_type":string,"explanation":string,"recommended_resolution":string,"summary":string}`,
   'paraphrase-link': `{"paraphrase_found":boolean,"matched_span":string,"similarity_score":number,"transformation_type":string,"summary":string}`,
   'source-deduplicate': `{"unique_count":number,"duplicates":[{"a":string,"b":string,"reason":string,"similarity":number}],"canonical_picks":[string],"summary":string}`,
-  'entailment-score': `{"label":"entails"|"contradicts"|"neutral","score":number,"highlighted_premise_span":string,"explanation":string,"summary":string}`
+  'entailment-score': `{"label":"entails"|"contradicts"|"neutral","score":number,"highlighted_premise_span":string,"explanation":string,"summary":string}`,
+  'citation-coverage': `{"sentence_count":number,"cited_sentence_count":number,"coverage_rate":number,"per_sentence":[{"sentence":string,"has_citation":boolean,"citations":[string],"necessity":"required"|"optional"|"redundant","reason":string}],"summary":string}`,
+  'hallucination-flag': `{"flagged_count":number,"per_sentence":[{"sentence":string,"verdict":"grounded"|"hallucinated"|"fabricated-source"|"unverifiable","confidence":number,"explanation":string}],"summary":string}`,
+  'source-credibility': `{"ranked":[{"source":string,"score":number,"authority":number,"recency":number,"independence":number,"bias":number,"rationale":string}],"summary":string}`,
+  'citation-generate': `{"style":string,"citation":string,"in_text":string,"fields":{"author":string,"title":string,"publisher":string,"year":string,"url":string,"locator":string},"summary":string}`,
+  'quote-verify': `{"verdict":"exact"|"paraphrase"|"misattributed"|"not-found","match_span":string,"similarity":number,"differences":[string],"explanation":string,"summary":string}`,
+  'numeric-consistency': `{"issues":[{"field":string,"claim_value":string,"source_value":string,"kind":"number"|"unit"|"currency"|"date","mismatch":boolean,"explanation":string}],"all_consistent":boolean,"summary":string}`,
+  'claim-novelty': `{"clusters":[{"cluster_id":string,"representative":string,"members":[string]}],"novel_claims":[string],"duplicate_pairs":[{"a":string,"b":string,"similarity":number}],"summary":string}`,
+  'evidence-retrieve': `{"query":string,"results":[{"source_id":string,"passage":string,"score":number,"rationale":string}],"summary":string}`,
+  'rag-answer': `{"question":string,"answer":string,"sentences":[{"text":string,"citations":[string]}],"citations":[{"id":string,"source":string,"span":string}],"unsupported":[string],"summary":string}`
 };
 
 const SAMPLES = {
@@ -48,6 +57,51 @@ const SAMPLES = {
     { label: 'Revenue', values: {"premise":"Q3 revenue increased 22%.","hypothesis":"Revenue grew 22% YoY."} },
     { label: 'Termination', values: {"premise":"Tenant may terminate with 90 days notice.","hypothesis":"Tenant can terminate with 60 days notice."} },
     { label: 'Dosage', values: {"premise":"metformin 500mg BID.","hypothesis":"metformin 1000mg daily."} }
+  ],
+  'citation-coverage': [
+    { label: 'Earnings report', values: {"report_text":"Q3 revenue grew 22% YoY [1]. Margins expanded by 200 bps. Headcount fell 5% [2].","citations_text":"[1] 10-K p.14\n[2] HR memo 2026-04"} },
+    { label: 'Lease summary', values: {"report_text":"Tenant has 90-day termination right [A]. No early termination fee.","citations_text":"[A] Lease §12.3"} },
+    { label: 'Medical brief', values: {"report_text":"Patient discharged on metformin [1]. Lisinopril added at discharge.","citations_text":"[1] Discharge note p.2"} }
+  ],
+  'hallucination-flag': [
+    { label: 'Mixed report', values: {"report_text":"Q3 revenue was $1.4B. Q3 margin was 80%. Acme acquired Beta in 2026.","sources_text":"Q3 revenue $1.4B. Q3 margin 64%."} },
+    { label: 'Lease with fab fee', values: {"report_text":"Tenant pays $10,000 early termination fee.","sources_text":"Tenant may terminate with 90 days notice. No fee mentioned."} },
+    { label: 'Med fabrications', values: {"report_text":"Patient discharged on metformin and warfarin per Dr. Smith 2099 study.","sources_text":"Discharge meds: metformin only."} }
+  ],
+  'source-credibility': [
+    { label: 'Mixed list', values: {"source_list_text":"nytimes.com\nrandomblog.example\ngovernment.gov/report\nreddit.com/r/news"} },
+    { label: 'Medical sources', values: {"source_list_text":"nejm.org\nwebmd.com\nbmj.com\nfacebook.com/post"} },
+    { label: 'Financial sources', values: {"source_list_text":"sec.gov/edgar\nbloomberg.com\nseekingalpha.com\nrandomstockblog.example"} }
+  ],
+  'citation-generate': [
+    { label: 'APA web', values: {"style":"APA","claim":"Q3 revenue grew 22%.","evidence_span":"Q3 revenue increased 22% YoY to $1.4B.","source_metadata":"Author: Acme Inc. Title: Q3 2026 Earnings Release. Publisher: Acme. Year: 2026. URL: https://acme.example/q3"} },
+    { label: 'MLA book', values: {"style":"MLA","claim":"Tenant has 90-day termination right.","evidence_span":"Tenant may, upon ninety (90) days written notice, terminate.","source_metadata":"Title: Commercial Lease Agreement. Year: 2024. Section: 12.3."} },
+    { label: 'Vancouver med', values: {"style":"Vancouver","claim":"Metformin first-line for type 2 diabetes.","evidence_span":"Metformin remains the first-line therapy.","source_metadata":"Authors: ADA. Title: Standards of Care. Journal: Diabetes Care. Year: 2025. Volume: 48. Pages: S1-S300."} }
+  ],
+  'quote-verify': [
+    { label: 'Exact', values: {"quote":"We will deliver in Q4.","source_text":"CEO said: 'We will deliver in Q4.'"} },
+    { label: 'Paraphrased', values: {"quote":"Delivery is on track for Q4.","source_text":"CEO said: 'We will deliver in Q4.'"} },
+    { label: 'Misattributed', values: {"quote":"Innovation distinguishes a leader.","source_text":"Steve Jobs quoted in Forbes 2011: 'Innovation distinguishes between a leader and a follower.' Often misattributed to Henry Ford."} }
+  ],
+  'numeric-consistency': [
+    { label: 'Currency unit', values: {"claim_text":"Revenue was $1,400M.","source_text":"Q3 revenue: $1.4 billion."} },
+    { label: 'Date format', values: {"claim_text":"Effective 04/05/2026.","source_text":"Effective May 4, 2026."} },
+    { label: 'Dose mismatch', values: {"claim_text":"Metformin 1000mg.","source_text":"metformin 500mg BID."} }
+  ],
+  'claim-novelty': [
+    { label: 'Earnings claims', values: {"new_claims_text":"Q3 revenue grew 22%.\nGross margin was 64%.\nQ3 revenue increased 22% YoY.","verified_claims_text":"Q3 revenue grew 22% to $1.4B.\nHeadcount fell 5%."} },
+    { label: 'Lease claims', values: {"new_claims_text":"Tenant can terminate in 90 days.\nTenant has 90-day notice right.","verified_claims_text":"Tenant has a 90-day termination right."} },
+    { label: 'Med claims', values: {"new_claims_text":"Patient on metformin.\nPatient on diabetes medication.","verified_claims_text":"Patient discharged on metformin 500mg BID."} }
+  ],
+  'evidence-retrieve': [
+    { label: 'Revenue query', values: {"query":"Did Q3 revenue grow 22%?","corpus_text":"[s1] Q3 revenue increased 22% YoY to $1.4B.\n[s2] Q2 revenue was flat.\n[s3] Headcount fell 5% in Q3.","top_k":3} },
+    { label: 'Lease query', values: {"query":"How much notice to terminate the lease?","corpus_text":"[s1] Tenant may, upon ninety (90) days written notice, terminate this lease.\n[s2] Landlord covenants apply throughout the term.\n[s3] Rent is due on the first.","top_k":2} },
+    { label: 'Med query', values: {"query":"What was the discharge medication?","corpus_text":"[s1] Discharge meds: metformin 500mg BID.\n[s2] BP measured 130/85 at discharge.\n[s3] Follow-up in 2 weeks.","top_k":2} }
+  ],
+  'rag-answer': [
+    { label: 'Revenue Q', values: {"question":"What was Q3 revenue?","corpus_text":"[s1] Q3 revenue increased 22% YoY to $1.4B.\n[s2] Q3 margin was 64%."} },
+    { label: 'Lease Q', values: {"question":"Can the tenant terminate early?","corpus_text":"[s1] Tenant may, upon ninety (90) days written notice, terminate.\n[s2] No early termination fee."} },
+    { label: 'Med Q', values: {"question":"What medications were prescribed?","corpus_text":"[s1] Discharge meds: metformin 500mg BID.\n[s2] Lisinopril 10mg QD added at discharge."} }
   ]
 };
 
@@ -133,6 +187,35 @@ router.post('/entailment-score', async (req, res) => {
     await record('entailment-score', req.body || {}, result);
     res.json(result);
   } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// ── Pass 7: new MECHANICAL AI features ─────────────────────────────
+function makeFeatureRoute(slug) {
+  router.post(`/${slug}`, async (req, res) => {
+    try {
+      const result = await ai.runFeature(slug, SCHEMAS[slug], req.body || {});
+      await record(slug, req.body || {}, result);
+      res.json(result);
+    } catch (e) { res.status(500).json({ error: e.message }); }
+  });
+}
+['citation-coverage','hallucination-flag','source-credibility','citation-generate',
+ 'quote-verify','numeric-consistency','claim-novelty','evidence-retrieve','rag-answer']
+  .forEach(makeFeatureRoute);
+
+// ── Pass 7: NEEDS-CREDS stubs (503 — explicit, documented) ─────────
+router.post('/embedding-index', (req, res) => {
+  res.status(503).json({
+    error: 'NEEDS-CREDS: embedding provider not configured',
+    detail: 'Requires OPENAI/Voyage/Cohere API key + pgvector extension; see _AUDIT_NOTE.md §5.',
+    hint: 'Use /api/ai/evidence-retrieve for LLM-rerank-only retrieval in the meantime.'
+  });
+});
+router.post('/live-web-fetch', (req, res) => {
+  res.status(503).json({
+    error: 'NEEDS-CREDS + TOO-RISKY: live web fetch disabled',
+    detail: 'Arbitrary-URL fetch is gated on archival/proxy creds + SSRF/legal review; see _AUDIT_NOTE.md §6.'
+  });
 });
 
 module.exports = router;
