@@ -1,7 +1,8 @@
 const jwt = require('jsonwebtoken');
 const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '..', '..', '.env') });
-const JWT_SECRET = process.env.JWT_SECRET || 'grounded_claims-secret-2026';
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET || JWT_SECRET.length < 32) throw new Error('JWT_SECRET must be configured with at least 32 characters');
 
 const authenticateToken = (req, res, next) => {
   const h = req.headers['authorization'];

@@ -1,25 +1,8 @@
 // LLM helper for Grounded Claims Verifier
-const fs = require('fs');
-const FALLBACK_ENV = '/Users/erolakarsu/projects/beauty-wellness-ai/.env';
-function readFallback() {
-  try {
-    if (!fs.existsSync(FALLBACK_ENV)) return {};
-    const out = {};
-    for (const line of fs.readFileSync(FALLBACK_ENV, 'utf8').split('\n')) {
-      const m = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*)\s*$/);
-      if (!m) continue;
-      let v = m[2];
-      if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'"))) v = v.slice(1, -1);
-      out[m[1]] = v;
-    }
-    return out;
-  } catch (_) { return {}; }
-}
 function creds() {
-  const fb = readFallback();
   return {
-    key: process.env.OPENROUTER_API_KEY || fb.OPENROUTER_API_KEY || '',
-    model: process.env.OPENROUTER_MODEL || fb.OPENROUTER_MODEL || 'anthropic/claude-haiku-4.5',
+    key: process.env.OPENROUTER_API_KEY || '',
+    model: process.env.OPENROUTER_MODEL || 'anthropic/claude-haiku-4.5',
   };
 }
 const SYSTEM_BASE = 'You are a senior analyst supporting the Grounded Claims Verifier. ' +

@@ -1,17 +1,18 @@
 const fs = require('fs');
 const path = require('path');
 const pool = require('../config/database');
+const { hashPassword } = require('../lib/passwords');
 
 async function main() {
+  if (process.env.RESET_DATABASE !== '1' || process.env.SEED_DEMO_DATA !== '1') throw new Error('Set RESET_DATABASE=1 and SEED_DEMO_DATA=1 for demo seed');
+  if (!process.env.SEED_DEMO_PASSWORD) throw new Error('SEED_DEMO_PASSWORD is required');
   const migDir = path.join(__dirname, '..', 'migrations');
   for (const f of fs.readdirSync(migDir).filter((x) => x.endsWith('.sql')).sort()) {
     const sql = fs.readFileSync(path.join(migDir, f), 'utf8');
     try { await pool.query(sql); console.log(`[seed] applied ${f}`); }
     catch (e) { console.warn(`[seed] ${f} warn: ${e.message}`); }
   }
-  await pool.query(
-    "INSERT INTO users (email, password, name, role) VALUES ('admin@grounded-claims.local','secure123','Admin','commander') ON CONFLICT (email) DO NOTHING"
-  );
+  await pool.query('INSERT INTO users(email,password,name,role) VALUES($1,$2,$3,$4) ON CONFLICT(email) DO NOTHING', ['admin@grounded.invalid', hashPassword(process.env.SEED_DEMO_PASSWORD), 'Admin', 'commander']);
   console.log('[seed] demo user ready');
 
   // documents

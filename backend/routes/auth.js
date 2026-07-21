@@ -3,27 +3,21 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 const { JWT_SECRET, authenticateToken, requireCommander } = require('../middleware/auth');
 const pool = require('../config/database');
-
-const DEMO_USER = { id: 1, email: 'admin@grounded-claims.local', password: 'secure123', name: 'Admin', role: 'commander' };
+const { verifyPassword } = require('../lib/passwords');
 
 async function findDbUser(email, password) {
-  try {
-    const r = await pool.query('SELECT id, email, password, name, role FROM users WHERE email=$1 LIMIT 1', [email]);
-    if (!r.rows.length) return null;
-    const u = r.rows[0];
-    if (u.password !== password) return null;
-    return { id: u.id, email: u.email, name: u.name, role: u.role };
-  } catch (_) { return null; }
+  const r = await pool.query('SELECT id,email,password,name,role,tenant_key FROM users WHERE email=$1 LIMIT 1', [String(email).trim().toLowerCase()]);
+  if (!r.rows.length) return null;
+  const u = r.rows[0];
+  if (!verifyPassword(password, u.password)) return null;
+  return { id: u.id, email: u.email, name: u.name, role: u.role, tenant_key: u.tenant_key || 'default' };
 }
 
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body || {};
     if (!email || !password) return res.status(400).json({ error: 'email and password required' });
-    let user = await findDbUser(email, password);
-    if (!user && email === DEMO_USER.email && password === DEMO_USER.password) {
-      user = { id: DEMO_USER.id, email: DEMO_USER.email, name: DEMO_USER.name, role: DEMO_USER.role };
-    }
+    const user = await findDbUser(email, password);
     if (!user) return res.status(401).json({ error: 'Invalid email or password' });
     const token = jwt.sign(user, JWT_SECRET, { expiresIn: '24h' });
     res.json({ token, user });

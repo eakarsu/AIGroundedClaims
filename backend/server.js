@@ -20,31 +20,14 @@ app.get('/api/health', (req, res) => res.json({ status: 'ok', service: 'AIGround
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api', authenticateToken);
 
-// CRUD entities
-app.use('/api/documents', require('./routes/Documents'));
-app.use('/api/claims', require('./routes/Claims'));
-app.use('/api/source-corpora', require('./routes/SourceCorpora'));
-app.use('/api/grounding-reports', require('./routes/GroundingReports'));
-app.use('/api/signatures', require('./routes/Signatures'));
-app.use('/api/redaction-logs', require('./routes/RedactionLogs'));
+// Legacy generic CRUD, unscoped bulk import, AI, and sample-monitor routes are
+// quarantined until their tenant and evidence contracts are migrated.
+app.use('/api/verification-workflow', require('./routes/claimVerificationWorkflow'));
 
-// AI + cross-cutting
-app.use('/api/ai', require('./routes/ai'));
-app.use('/api/notifications', require('./routes/notifications'));
-app.use('/api/attachments', require('./routes/attachments'));
-app.use('/api/webhooks', require('./routes/webhooks'));
-app.use('/api/dashboard', require('./routes/dashboard'));
+app.use('/api', (req, res) => res.status(404).json({ error: 'not_found' }));
 
-app.use('/api', require('./routes/groundedExtras'));
+if (require.main === module) {
+  app.listen(PORT, () => console.log(`\nGrounded Claims Verifier API on http://localhost:${PORT}\n`));
+}
 
-// Custom Views (mounted BEFORE any 404 handler)
-app.use('/api/custom-views', require('./routes/customViews'));
-
-// Pass 7: evidence-library CRUD + extras (mounted BEFORE any 404 handler)
-app.use('/api/sources', require('./routes/Sources'));
-app.use('/api/document-spans', require('./routes/DocumentSpans'));
-app.use('/api/evidence-links', require('./routes/EvidenceLinks'));
-app.use('/api', require('./routes/groundedPass7'));
-app.use('/api/source-staleness-monitor', require('./routes/sourceStalenessMonitor'));
-
-app.listen(PORT, () => console.log(`\nGrounded Claims Verifier API on http://localhost:${PORT}\n`));
+module.exports = app;
