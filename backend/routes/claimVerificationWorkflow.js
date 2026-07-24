@@ -2,9 +2,25 @@ const express = require('express');
 const pool = require('../config/database');
 const { requireCommander } = require('../middleware/auth');
 const { validateRequest, verifyClaim } = require('../domain/claimVerificationWorkflow');
+const ai = require('../services/ai');
 
 const router = express.Router();
 const tenantOf = (req) => req.user.tenant_key || 'default';
+
+router.post('/ai-assist', async (req, res) => {
+  const claimText = String(req.body?.claim_text || '').trim();
+  const evidenceText = String(req.body?.evidence_text || '').trim();
+  if (!claimText || !evidenceText) {
+    return res.status(400).json({ error: 'claim_text and evidence_text are required' });
+  }
+  const analysis = await ai.runFeature(
+    'governed-claim-assist',
+    '{"verdict":"supported|partial|unsupported|contradicted","confidence":number,"supporting_span":string,"reasoning":string,"review_required":boolean,"summary":string}',
+    { tenant_key: tenantOf(req), claim_text: claimText, evidence_text: evidenceText }
+  );
+  if (analysis.error) return res.status(502).json({ error: analysis.error });
+  return res.json({ tenant_key: tenantOf(req), analysis });
+});
 
 router.post('/claims', async (req, res) => {
   const errors = validateRequest(req.body);

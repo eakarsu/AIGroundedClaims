@@ -1,4 +1,4 @@
-const API_BASE = 'http://localhost:4057/api';
+const API_BASE = process.env.REACT_APP_API_URL || '/api';
 const TOKEN_KEY = 'grounded_claims_token';
 const USER_KEY = 'grounded_claims_user';
 

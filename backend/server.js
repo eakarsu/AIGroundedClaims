@@ -10,7 +10,7 @@ const app = express();
 const PORT = process.env.BACKEND_PORT || 4057;
 
 app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
-const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'http://localhost:4056').split(',').map((o) => o.trim()).filter(Boolean);
+const allowedOrigins = (process.env.CORS_ORIGINS || process.env.CORS_ORIGIN || process.env.ALLOWED_ORIGINS || 'http://localhost:4056').split(',').map((o) => o.trim()).filter(Boolean);
 app.use(cors({ origin: (origin, cb) => (!origin || allowedOrigins.includes(origin) ? cb(null, true) : cb(new Error('cors'))), credentials: true }));
 app.use(express.json({ limit: '20mb' }));
 app.use(express.urlencoded({ extended: true, limit: '20mb' }));
