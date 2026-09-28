@@ -1,4 +1,7 @@
-const API_BASE = process.env.REACT_APP_API_URL || '/api';
+const configuredApiBase = process.env.REACT_APP_API_URL || '/api';
+const API_BASE = configuredApiBase.endsWith('/api')
+  ? configuredApiBase
+  : `${configuredApiBase.replace(/\/$/, '')}/api`;
 const TOKEN_KEY = 'grounded_claims_token';
 const USER_KEY = 'grounded_claims_user';
 
