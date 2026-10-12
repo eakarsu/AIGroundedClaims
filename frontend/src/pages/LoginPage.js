@@ -3,10 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { login, setToken, setStoredUser } from '../services/api';
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('admin@grounded-claims.local');
-  const [password, setPassword] = useState('secure123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
   const [busy, setBusy] = useState(false);
+  const demoAvailable = Boolean(process.env.REACT_APP_DEMO_EMAIL && process.env.REACT_APP_DEMO_PASSWORD);
   const navigate = useNavigate();
   const submit = async (e) => {
     e.preventDefault();
@@ -34,17 +35,17 @@ export default function LoginPage() {
         {error && <div className="ai-error">{error}</div>}
         <button
           type="button"
-          onClick={() => { setEmail(process.env.REACT_APP_DEMO_EMAIL || ''); setPassword(process.env.REACT_APP_DEMO_PASSWORD || ''); }}
-          disabled={!process.env.REACT_APP_DEMO_EMAIL || !process.env.REACT_APP_DEMO_PASSWORD}
-          aria-label="Auto Fill Demo Credentials"
+          onClick={() => { setEmail(process.env.REACT_APP_DEMO_EMAIL); setPassword(process.env.REACT_APP_DEMO_PASSWORD); setError(null); }}
+          disabled={!demoAvailable || busy}
+          aria-label="Fill demo credentials"
           style={{ width: '100%', marginBottom: '12px', padding: '10px 14px', borderRadius: '8px', border: '1px solid currentColor', background: 'transparent', cursor: 'pointer' }}
         >
-          Auto Fill Demo Credentials
+          Fill demo credentials
         </button>
         <button className="btn" type="submit" disabled={busy} style={{ width: '100%', marginTop: 10 }}>
           {busy ? 'Signing in...' : 'Sign In'}
         </button>
-        <p className="login-hint">demo: <code>admin@grounded-claims.local</code> / <code>secure123</code></p>
+        {!demoAvailable && <p className="login-hint">Demo credentials are not configured for this frontend build.</p>}
       </form>
     </div>
   );

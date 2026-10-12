@@ -13,7 +13,7 @@ export default function AIEvidenceRetrievePage() {
         { key: 'corpus_text', label: 'Corpus Text (label passages [s1]..[sN])', type: 'textarea' },
         { key: 'top_k', label: 'top_k', type: 'number', defaultValue: 3 },
       ]}
-      run={(v) => aiEvidenceRetrieve(v)}
+      run={(v, requestOptions) => aiEvidenceRetrieve(v, requestOptions)}
     />
   );
 }

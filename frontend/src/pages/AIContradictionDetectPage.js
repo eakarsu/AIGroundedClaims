@@ -12,7 +12,7 @@ export default function AIContradictionDetectPage() {
         { key: 'claim_a', label: 'Claim A', type: 'textarea', placeholder: '' },
         { key: 'claim_b', label: 'Claim B', type: 'textarea', placeholder: '' }
       ]}
-      run={(v) => aiContradictionDetect(v)}
+      run={(v, requestOptions) => aiContradictionDetect(v, requestOptions)}
     />
   );
 }

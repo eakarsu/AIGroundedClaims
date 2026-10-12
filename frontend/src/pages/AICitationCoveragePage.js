@@ -12,7 +12,7 @@ export default function AICitationCoveragePage() {
         { key: 'report_text', label: 'Report Text', type: 'textarea' },
         { key: 'citations_text', label: 'Citations / Footnotes', type: 'textarea' },
       ]}
-      run={(v) => aiCitationCoverage(v)}
+      run={(v, requestOptions) => aiCitationCoverage(v, requestOptions)}
     />
   );
 }

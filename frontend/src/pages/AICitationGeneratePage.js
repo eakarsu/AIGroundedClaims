@@ -14,7 +14,7 @@ export default function AICitationGeneratePage() {
         { key: 'evidence_span', label: 'Evidence Span', type: 'textarea' },
         { key: 'source_metadata', label: 'Source Metadata', type: 'textarea' },
       ]}
-      run={(v) => aiCitationGenerate(v)}
+      run={(v, requestOptions) => aiCitationGenerate(v, requestOptions)}
     />
   );
 }

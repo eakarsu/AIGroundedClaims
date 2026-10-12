@@ -12,7 +12,7 @@ export default function AIClaimNoveltyPage() {
         { key: 'new_claims_text', label: 'New Claims (one per line)', type: 'textarea' },
         { key: 'verified_claims_text', label: 'Verified Claim Store', type: 'textarea' },
       ]}
-      run={(v) => aiClaimNovelty(v)}
+      run={(v, requestOptions) => aiClaimNovelty(v, requestOptions)}
     />
   );
 }

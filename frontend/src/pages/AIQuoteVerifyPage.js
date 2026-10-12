@@ -12,7 +12,7 @@ export default function AIQuoteVerifyPage() {
         { key: 'quote', label: 'Quote', type: 'textarea' },
         { key: 'source_text', label: 'Source Text', type: 'textarea' },
       ]}
-      run={(v) => aiQuoteVerify(v)}
+      run={(v, requestOptions) => aiQuoteVerify(v, requestOptions)}
     />
   );
 }

@@ -57,24 +57,24 @@ export const grounding_reportsApi = crud('grounding-reports');
 export const signaturesApi = crud('signatures');
 export const redaction_logsApi = crud('redaction-logs');
 
-export const aiExtractClaims = (body) => request('/ai/extract-claims', { method: 'POST', body: JSON.stringify(body || {}) });
-export const aiGroundClaims = (body) => request('/ai/ground-claims', { method: 'POST', body: JSON.stringify(body || {}) });
-export const aiGroundingReport = (body) => request('/ai/grounding-report', { method: 'POST', body: JSON.stringify(body || {}) });
-export const aiContradictionDetect = (body) => request('/ai/contradiction-detect', { method: 'POST', body: JSON.stringify(body || {}) });
-export const aiParaphraseLink = (body) => request('/ai/paraphrase-link', { method: 'POST', body: JSON.stringify(body || {}) });
-export const aiSourceDeduplicate = (body) => request('/ai/source-deduplicate', { method: 'POST', body: JSON.stringify(body || {}) });
-export const aiEntailmentScore = (body) => request('/ai/entailment-score', { method: 'POST', body: JSON.stringify(body || {}) });
+export const aiExtractClaims = (body, options = {}) => request('/ai/extract-claims', { ...options, method: 'POST', body: JSON.stringify(body || {}) });
+export const aiGroundClaims = (body, options = {}) => request('/ai/ground-claims', { ...options, method: 'POST', body: JSON.stringify(body || {}) });
+export const aiGroundingReport = (body, options = {}) => request('/ai/grounding-report', { ...options, method: 'POST', body: JSON.stringify(body || {}) });
+export const aiContradictionDetect = (body, options = {}) => request('/ai/contradiction-detect', { ...options, method: 'POST', body: JSON.stringify(body || {}) });
+export const aiParaphraseLink = (body, options = {}) => request('/ai/paraphrase-link', { ...options, method: 'POST', body: JSON.stringify(body || {}) });
+export const aiSourceDeduplicate = (body, options = {}) => request('/ai/source-deduplicate', { ...options, method: 'POST', body: JSON.stringify(body || {}) });
+export const aiEntailmentScore = (body, options = {}) => request('/ai/entailment-score', { ...options, method: 'POST', body: JSON.stringify(body || {}) });
 
 // Pass 7 — new AI features
-export const aiCitationCoverage = (body) => request('/ai/citation-coverage', { method: 'POST', body: JSON.stringify(body || {}) });
-export const aiHallucinationFlag = (body) => request('/ai/hallucination-flag', { method: 'POST', body: JSON.stringify(body || {}) });
-export const aiSourceCredibility = (body) => request('/ai/source-credibility', { method: 'POST', body: JSON.stringify(body || {}) });
-export const aiCitationGenerate = (body) => request('/ai/citation-generate', { method: 'POST', body: JSON.stringify(body || {}) });
-export const aiQuoteVerify = (body) => request('/ai/quote-verify', { method: 'POST', body: JSON.stringify(body || {}) });
-export const aiNumericConsistency = (body) => request('/ai/numeric-consistency', { method: 'POST', body: JSON.stringify(body || {}) });
-export const aiClaimNovelty = (body) => request('/ai/claim-novelty', { method: 'POST', body: JSON.stringify(body || {}) });
-export const aiEvidenceRetrieve = (body) => request('/ai/evidence-retrieve', { method: 'POST', body: JSON.stringify(body || {}) });
-export const aiRagAnswer = (body) => request('/ai/rag-answer', { method: 'POST', body: JSON.stringify(body || {}) });
+export const aiCitationCoverage = (body, options = {}) => request('/ai/citation-coverage', { ...options, method: 'POST', body: JSON.stringify(body || {}) });
+export const aiHallucinationFlag = (body, options = {}) => request('/ai/hallucination-flag', { ...options, method: 'POST', body: JSON.stringify(body || {}) });
+export const aiSourceCredibility = (body, options = {}) => request('/ai/source-credibility', { ...options, method: 'POST', body: JSON.stringify(body || {}) });
+export const aiCitationGenerate = (body, options = {}) => request('/ai/citation-generate', { ...options, method: 'POST', body: JSON.stringify(body || {}) });
+export const aiQuoteVerify = (body, options = {}) => request('/ai/quote-verify', { ...options, method: 'POST', body: JSON.stringify(body || {}) });
+export const aiNumericConsistency = (body, options = {}) => request('/ai/numeric-consistency', { ...options, method: 'POST', body: JSON.stringify(body || {}) });
+export const aiClaimNovelty = (body, options = {}) => request('/ai/claim-novelty', { ...options, method: 'POST', body: JSON.stringify(body || {}) });
+export const aiEvidenceRetrieve = (body, options = {}) => request('/ai/evidence-retrieve', { ...options, method: 'POST', body: JSON.stringify(body || {}) });
+export const aiRagAnswer = (body, options = {}) => request('/ai/rag-answer', { ...options, method: 'POST', body: JSON.stringify(body || {}) });
 
 // Pass 7 — evidence library CRUD (sources / document_spans / evidence_links)
 export const sourcesApi = crud('sources');

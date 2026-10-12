@@ -12,7 +12,7 @@ export default function AIParaphraseLinkPage() {
         { key: 'claim_text', label: 'Claim', type: 'textarea', placeholder: '' },
         { key: 'source_corpus', label: 'Source Corpus', type: 'textarea', placeholder: '' }
       ]}
-      run={(v) => aiParaphraseLink(v)}
+      run={(v, requestOptions) => aiParaphraseLink(v, requestOptions)}
     />
   );
 }

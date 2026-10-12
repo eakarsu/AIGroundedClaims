@@ -12,7 +12,7 @@ export default function AINumericConsistencyPage() {
         { key: 'claim_text', label: 'Claim Text', type: 'textarea' },
         { key: 'source_text', label: 'Source Text', type: 'textarea' },
       ]}
-      run={(v) => aiNumericConsistency(v)}
+      run={(v, requestOptions) => aiNumericConsistency(v, requestOptions)}
     />
   );
 }

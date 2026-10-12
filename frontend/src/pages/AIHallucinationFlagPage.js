@@ -12,7 +12,7 @@ export default function AIHallucinationFlagPage() {
         { key: 'report_text', label: 'Report Text', type: 'textarea' },
         { key: 'sources_text', label: 'Sources / Evidence', type: 'textarea' },
       ]}
-      run={(v) => aiHallucinationFlag(v)}
+      run={(v, requestOptions) => aiHallucinationFlag(v, requestOptions)}
     />
   );
 }

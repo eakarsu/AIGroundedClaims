@@ -11,7 +11,7 @@ export default function AISourceDeduplicatePage() {
       inputs={[
         { key: 'source_list_text', label: 'Sources (newline)', type: 'textarea', placeholder: '' }
       ]}
-      run={(v) => aiSourceDeduplicate(v)}
+      run={(v, requestOptions) => aiSourceDeduplicate(v, requestOptions)}
     />
   );
 }

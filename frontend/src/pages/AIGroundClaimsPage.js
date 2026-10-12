@@ -12,7 +12,7 @@ export default function AIGroundClaimsPage() {
         { key: 'claims_text', label: 'Claims (newline)', type: 'textarea', placeholder: '' },
         { key: 'sources_text', label: 'Source Corpus', type: 'textarea', placeholder: '' }
       ]}
-      run={(v) => aiGroundClaims(v)}
+      run={(v, requestOptions) => aiGroundClaims(v, requestOptions)}
     />
   );
 }

@@ -12,7 +12,7 @@ export default function AIEntailmentScorePage() {
         { key: 'premise', label: 'Premise', type: 'textarea', placeholder: '' },
         { key: 'hypothesis', label: 'Hypothesis', type: 'textarea', placeholder: '' }
       ]}
-      run={(v) => aiEntailmentScore(v)}
+      run={(v, requestOptions) => aiEntailmentScore(v, requestOptions)}
     />
   );
 }

@@ -12,7 +12,7 @@ export default function AIGroundingReportPage() {
         { key: 'report_text', label: 'Generated Report', type: 'textarea', placeholder: '' },
         { key: 'sources_text', label: 'Source Corpus', type: 'textarea', placeholder: '' }
       ]}
-      run={(v) => aiGroundingReport(v)}
+      run={(v, requestOptions) => aiGroundingReport(v, requestOptions)}
     />
   );
 }

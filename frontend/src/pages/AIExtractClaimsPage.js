@@ -11,7 +11,7 @@ export default function AIExtractClaimsPage() {
       inputs={[
         { key: 'text', label: 'Source Text', type: 'textarea', placeholder: '' }
       ]}
-      run={(v) => aiExtractClaims(v)}
+      run={(v, requestOptions) => aiExtractClaims(v, requestOptions)}
     />
   );
 }

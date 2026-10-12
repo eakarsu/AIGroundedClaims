@@ -12,7 +12,7 @@ export default function AIRagAnswerPage() {
         { key: 'question', label: 'Question', type: 'textarea' },
         { key: 'corpus_text', label: 'Corpus Text (label passages [s1]..[sN])', type: 'textarea' },
       ]}
-      run={(v) => aiRagAnswer(v)}
+      run={(v, requestOptions) => aiRagAnswer(v, requestOptions)}
     />
   );
 }
