@@ -22,6 +22,7 @@ app.use('/api', authenticateToken);
 
 // Legacy generic CRUD, unscoped bulk import, AI, and sample-monitor routes are
 // quarantined until their tenant and evidence contracts are migrated.
+app.use('/api/feature-pack', require('./featurePack').createRouter());
 app.use('/api/verification-workflow', require('./routes/claimVerificationWorkflow'));
 
 app.use('/api', (req, res) => res.status(404).json({ error: 'not_found' }));

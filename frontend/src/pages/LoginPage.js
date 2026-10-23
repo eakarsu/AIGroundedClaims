@@ -9,15 +9,18 @@ export default function LoginPage() {
   const [busy, setBusy] = useState(false);
   const demoAvailable = Boolean(process.env.REACT_APP_DEMO_EMAIL && process.env.REACT_APP_DEMO_PASSWORD);
   const navigate = useNavigate();
-  const submit = async (e) => {
-    e.preventDefault();
+  const signInWith = async (loginEmail, loginPassword) => {
     setBusy(true); setError(null);
     try {
-      const { token, user } = await login(email, password);
+      const { token, user } = await login(loginEmail, loginPassword);
       setToken(token); setStoredUser(user);
       navigate('/');
     } catch (err) { setError(err.message); }
     finally { setBusy(false); }
+  };
+  const submit = async (e) => {
+    e.preventDefault();
+    await signInWith(email, password);
   };
   return (
     <div className="login-shell">
@@ -35,7 +38,13 @@ export default function LoginPage() {
         {error && <div className="ai-error">{error}</div>}
         <button
           type="button"
-          onClick={() => { setEmail(process.env.REACT_APP_DEMO_EMAIL); setPassword(process.env.REACT_APP_DEMO_PASSWORD); setError(null); }}
+          onClick={() => {
+            const demoEmail = process.env.REACT_APP_DEMO_EMAIL || '';
+            const demoPassword = process.env.REACT_APP_DEMO_PASSWORD || '';
+            setEmail(demoEmail);
+            setPassword(demoPassword);
+            signInWith(demoEmail, demoPassword);
+          }}
           disabled={!demoAvailable || busy}
           aria-label="Fill demo credentials"
           style={{ width: '100%', marginBottom: '12px', padding: '10px 14px', borderRadius: '8px', border: '1px solid currentColor', background: 'transparent', cursor: 'pointer' }}
